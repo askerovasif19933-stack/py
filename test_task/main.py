@@ -9,7 +9,7 @@ from create_base import new_base
 def changing_the_data(base: str):
 
     with ObjectDataBaseConnect(base) as db:
-        # для сраснения изменений
+
         old_val = db.select("""SELECT status, owner from data""", fetch_all=True)
 
         while True:
@@ -37,14 +37,11 @@ def changing_the_data(base: str):
                     SET processed_at = NOW()
                     WHERE doc_id = %s
                 """, (doc_id,))
-            # для проверки изменения результата до и после
-            new_val = db.select("""SELECT status, owner from data""", fetch_all=True)
-            for old, new in zip(old_val, new_val):
-               print(old, old == new, new)
+
             
     return True
 
-
+@decorator_catching_errors
 def find_children_parents(db):
     row = db.select(""" 
     SELECT object, parent FROM data
@@ -57,7 +54,7 @@ def find_children_parents(db):
 
     return relatives
 
-
+@decorator_catching_errors
 def change_data(db, operation_details, obj, all_relatives):
     if not operation_details:
         return
