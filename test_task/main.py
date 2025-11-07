@@ -2,7 +2,7 @@ from object_database import ObjectDataBaseConnect, decorator_catching_errors
 from create_base import new_base
 
 
-# берем один не обработаный документ документ
+# берем один не обработаный документ 
 @decorator_catching_errors
 def changing_the_data(base: str):
     with ObjectDataBaseConnect(base) as db:
