@@ -1,5 +1,3 @@
-from itertools import chain
-from operator import le
 from object_database import ObjectDataBaseConnect, decorator_catching_errors
 from create_base import new_base
 
