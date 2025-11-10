@@ -51,7 +51,8 @@ class ObjectDataBaseConnect:
         with self.connect_db.cursor() as cur:
             if ext_many:
                 cur.executemany(sql, parms)
-            cur.execute(sql, parms)
+            else:
+                cur.execute(sql, parms)
     
     def close(self):
         self.connect_db.close()
