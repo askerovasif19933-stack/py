@@ -42,17 +42,15 @@ class ObjectDataBaseConnect:
 
             cur.execute(sql, parms)
             if fetch_all:
-                fetch = cur.fetchall()
-            else:
-                fetch = cur.fetchone()
-            return fetch
+                return cur.fetchall()
+            return cur.fetchone()
+            
     
     def execute(self, sql, parms=None, ext_many = False):
         with self.connect_db.cursor() as cur:
             if ext_many:
                 cur.executemany(sql, parms)
-            else:
-                cur.execute(sql, parms)
+            cur.execute(sql, parms)
     
     def close(self):
         self.connect_db.close()
