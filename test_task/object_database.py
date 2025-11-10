@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import psycopg2
 
-
+load_dotenv()
 # класс для соединения, выборки, втавки и измения данных, декоратор для отлавливания ошибок 
 
 def decorator_catching_errors(func):

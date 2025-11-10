@@ -26,13 +26,14 @@ def insert():
         session.add_all(insert_doc)
         session.commit()
 
-        print(f"Вставлено {len(insert_data)} данных и {len(insert_doc)} документов")
+        print(f"Данные вставлены")
 
 
 def main():
     with get_session() as session:
-        old = select(Data.status, Data.owner)
-        old_ex = session.execute(old).all()
+        # для проверки изменились ли данные 
+        # old = select(Data.status, Data.owner)
+        # old_ex = session.execute(old).all()
         while True:
             # Находим необработанный документ
             stmt = select(Documents).where(
@@ -53,7 +54,7 @@ def main():
             objects = data['objects']
             operations = data.get('operation_details', {})
 
-            # собираем все дочерние обьекты в список по ключу parent
+            # собираем словварь. ключу parent : дочерние обьекты в список 
             relative = select(Data.object, Data.parent)
             all_child_parent = session.execute(relative).all()
             parent_child = {}
@@ -61,14 +62,16 @@ def main():
             for child, parent in all_child_parent:
                 parent_child.setdefault(parent, []).append(child)
 
-            # Применяем операции если есть
+            # Применяем операции если operations не пустой
             if operations:
+            # Собираем всех детей и родителей в список    
                 list_all_relative = []
-
+                
                 for i in objects:
                     if i in parent_child:
                         list_all_relative.extend(parent_child[i]+[i])
-
+                        
+            # изменяем значения из таблицы data
                 for operation, details in operations.items():
                     session.execute(
                         update(Data).where(
@@ -82,11 +85,10 @@ def main():
             # Помечаем документ обработанным
             document.processed_at = func.now()
             session.commit()
-
+            
+        # для проверки изменились ли данные 
         # new = select(Data.status, Data.owner)
         # new_ex = session.execute(new).all()
-
-
         # for k,v in zip(old_ex, new_ex):
         #     print(k, k==v, v)
 
