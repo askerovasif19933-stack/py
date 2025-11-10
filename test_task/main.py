@@ -39,7 +39,7 @@ def changing_the_data(base: str):
 
 # собираем все дочерние обьекты в словарь
 @decorator_catching_errors
-def find_children_parents(db):
+def find_children_parents(db: ObjectDataBaseConnect):
     row = db.select(""" 
     SELECT object, parent FROM data
     """, fetch_all=True)
@@ -53,7 +53,7 @@ def find_children_parents(db):
 
 # вносим изменения
 @decorator_catching_errors
-def change_data(db, operation_details, obj, all_relatives):
+def change_data(db: ObjectDataBaseConnect, operation_details: dict[dict], obj: list, all_relatives: dict):
     if not operation_details:
         return
     all_children_parents = []
