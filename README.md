@@ -50,13 +50,21 @@ CREATE TABLE IF NOT EXISTS public.data
 );
 
 CREATE TABLE IF NOT EXISTS public.documents
+
 (
+
     doc_id character varying NOT NULL,
+    
     recieved_at timestamp without time zone,
+    
     document_type character varying,
+    
     document_data jsonb,
+    
     processed_at timestamp without time zone,
+    
     CONSTRAINT documents_pkey PRIMARY KEY (doc_id)
+    
 );
 
 
@@ -85,8 +93,11 @@ CREATE TABLE IF NOT EXISTS public.documents
 
 
 "owner": {
+
     "new": "owner_4",
+    
     "old": "owner_3"
+    
 }
 
 5. После успешной обработки документа поставить отметку времени в processed_at.
@@ -99,20 +110,35 @@ CREATE TABLE IF NOT EXISTS public.documents
 Пример структуры JSON документа:
 
 {
+
     "document_data": {
+    
         "document_id": "25e91d56-696e-4be6-952c-4089593877a7",
+        
         "document_type": "transfer_document"
+        
     },
+    
     "objects": [
+    
         "p_effe6195-cc7f-44c2-a02c-46fc07dcd3e6",
+        
         "p_8943e9fb-a2e7-4344-8c48-91d3a4fbdb0c"
+        
     ],
+    
     "operation_details": {
+    
         "owner": {
+        
             "new": "owner_4",
+            
             "old": "owner_3"
+            
         }
+        
     }
+    
 }
 
 
