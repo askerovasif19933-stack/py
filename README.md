@@ -140,28 +140,17 @@ DB_PASSWORD=your_password
 
 Запуск
 
-1. Создание базы данных:
+1. Создание базы данных, запустить файл creat_base:
 
-
-
-from create_base import creat_base
 creat_base('postgres', 'test')
 
-2. Создание таблиц и заполнение тестовыми данными:
+2. Создание таблиц и заполнение тестовыми данными, запустить файл create_insert_table:
 
-
-
-from create_base import create_table, new_base
 create_table(new_base)
 
-3. Обработка документов:
+3. Обработка документов, запустить файл main:
 
-
-
-from main import main
-from create_base import new_base
 main(new_base)
-
 
 ---
 
