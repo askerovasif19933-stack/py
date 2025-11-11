@@ -87,5 +87,4 @@ if __name__ == '__main__':
     data_tbl = list(data.values())
     documents_tbl = make_documents(data)
 
-    for i in documents_tbl:
-        print(i.keys())
+

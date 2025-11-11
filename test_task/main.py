@@ -1,79 +1,25 @@
-from object_database import ObjectDataBaseConnect, decorator_catching_errors
+from object_database_connect import ObjectDataBaseConnect
+from data_correction import select_one_doc, parsing_data, search_all_child, correct_data, set_processing_time
 from create_base import new_base
 
 
-# берем один не обработаный документ 
-@decorator_catching_errors
-def changing_the_data(base: str):
-    with ObjectDataBaseConnect(base) as db:
+def main(base:str):
 
+    with ObjectDataBaseConnect(base) as db:
         old_val = db.select("""SELECT status, owner from data""", fetch_all=True)
 
-        while True:
+        row = select_one_doc(db)
 
-            row = db.select("""
-            SELECT doc_id, document_data FROM documents
-            WHERE processed_at is NULL AND document_type = 'transfer_document'
-            ORDER BY recieved_at ASC
-            LIMIT 1
-            """)
+        doc_id, obj, operation_details = parsing_data(db, row)
 
-            if not row:
-                break
+        all_parand_child = search_all_child(db, obj)
 
-            doc_id, jsonb = row
-            obj = jsonb['objects']
-            operation_details = jsonb['operation_details']
+        correct_data(db, all_parand_child, operation_details)
 
-            all_relatives = find_children_parents(db)
-            change_data(db, operation_details, obj, all_relatives)
+        set_processing_time(db, doc_id)
+        new_val = db.select("""SELECT status, owner from data""", fetch_all=True)
+        for k,v in zip(old_val, new_val):
+            print(k, k==v, v)
+        return True
 
-            db.execute("""
-                    UPDATE documents
-                    SET processed_at = NOW()
-                    WHERE doc_id = %s
-                """, (doc_id,))
-  
-    return True
-
-
-# собираем все дочерние обьекты в словарь
-@decorator_catching_errors
-def find_children_parents(db: 'ObjectDataBaseConnect'):
-    row = db.select(""" 
-    SELECT object, parent FROM data
-    """, fetch_all=True)
-
-    relatives = {}
-
-    for child,parent in row:
-        relatives.setdefault(parent, []).append(child)
-
-    return relatives
-
-# вносим изменения
-@decorator_catching_errors
-def change_data(db: 'ObjectDataBaseConnect', operation_details: dict[dict], obj: list, all_relatives: dict):
-    if not operation_details:
-        return
-    all_children_parents = []
-
-    for i in obj:
-        if i in all_relatives:
-            all_children_parents.extend(all_relatives[i] + [i])
-
-    
-    for operation, details in operation_details.items():
-        new = details['new']
-        old = details['old']
-
-        db.execute(f""" 
-            UPDATE data
-            SET {operation} = %s
-            WHERE {operation} = %s
-            AND object = ANY(%s)
-            """, (new, old, all_children_parents))
-
-
-if __name__ == '__main__':
-    print(changing_the_data(new_base))
+print(main(new_base))
