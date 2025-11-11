@@ -165,21 +165,6 @@ main(new_base)
 
 ---
 
-Структура проекта
-
-.
-├── config.py
-├── object_database_connect.py
-├── decorator_catching_error.py
-├── create_base.py
-├── data_filler.py
-├── data_correction.py
-├── main.py
-├── requirements.txt
-└── README.md
-
-
----
 
 Особенности
 
