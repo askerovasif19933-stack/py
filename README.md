@@ -1,39 +1,66 @@
+Тестовое задание: обработка документов в PostgreSQL
 
-Подготовка:
-Запустить этот скрипт data_filler.py для генерации данных для задачи, перенести данные в базу
+Подготовка
+1. Запустить скрипт data_filler.py для генерации тестовых данных.
+2. Данные будут перенесены в базу через create_table.py.
 
-Легенда:
-есть таблица documents с условными документами, которые поступают от клиентов, есть таблица data с условными объектами, которые содержатся в документах, они могут быть связаны полем parent, в этом случае условный объект считаем упаковкой, а дочерние элементы, у которых он заполнен в поле parent - содержимым упаковки
+---
 
-Критерии оценки решения:
-результат работы соответствует ТЗ
-читабельность кода
-удобство поддержки
-Представьте, что ваше решение досталось вам и теперь нужного поддерживать и развивать
+Легенда
+Таблица documents содержит условные документы, поступающие от клиентов.
+Таблица data содержит объекты, которые могут встречаться в документах.
+Связь между объектами осуществляется через поле parent
+Объект с заполненным parent считается содержимым упаковки.
+Объект без parent считается упаковкой.
 
-Создание таблиц в postgres для задачи:
+---
+
+Создание таблиц в PostgreSQL
+
 CREATE TABLE IF NOT EXISTS public.data
 (
-    object character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    object character varying(50) NOT NULL,
     status integer,
     level integer,
-    parent character varying COLLATE pg_catalog."default",
-    owner character varying(14) COLLATE pg_catalog."default",
+    parent character varying,
+    owner character varying(14),
     CONSTRAINT data_pkey PRIMARY KEY (object)
-)
+);
+
 CREATE TABLE IF NOT EXISTS public.documents
 (
-    doc_id character varying COLLATE pg_catalog."default" NOT NULL,
+    doc_id character varying NOT NULL,
     recieved_at timestamp without time zone,
-    document_type character varying COLLATE pg_catalog."default",
+    document_type character varying,
     document_data jsonb,
     processed_at timestamp without time zone,
     CONSTRAINT documents_pkey PRIMARY KEY (doc_id)
-)
-Тестовое задание:
-Написать алгоритм обработки документов из таблицы documents по условиям
+);
 
-Пример структуры json документа из поля document_data:
+
+---
+
+Тестовое задание
+Написать алгоритм обработки документов из таблицы documents по следующим условиям:
+
+1. Выбрать один необработанный документ (processed_at IS NULL) с типом transfer_document, сортировка по recieved_at ASC.
+2. Разобрать JSON документа:
+
+Ключ objects — список объектов, связанных с документом.
+Ключ operation_details — операции изменения данных в таблице data.
+
+3. Получить полный список объектов, учитывая дочерние элементы (связь по parent).
+4. Обновить данные в таблице data, если значения соответствуют условиям operation_details:
+
+"owner": {
+    "new": "owner_4",
+    "old": "owner_3"
+}
+
+5. После успешной обработки документа поставить отметку времени в processed_at.
+6. Функция возвращает True, если обработка прошла успешно, иначе False.
+
+Пример структуры JSON документа:
 
 {
     "document_data": {
@@ -42,8 +69,8 @@ CREATE TABLE IF NOT EXISTS public.documents
     },
     "objects": [
         "p_effe6195-cc7f-44c2-a02c-46fc07dcd3e6",
-        "p_8943e9fb-a2e7-4344-8c48-91d3a4fbdb0c",
-        ],
+        "p_8943e9fb-a2e7-4344-8c48-91d3a4fbdb0c"
+    ],
     "operation_details": {
         "owner": {
             "new": "owner_4",
@@ -52,26 +79,70 @@ CREATE TABLE IF NOT EXISTS public.documents
     }
 }
 
+---
 
-После запуска скрипта он должен брать из таблицы documents 1 необработанный документ (сортировка по полю recived_at ASC) с типом transfer_document и обрабатывать по алгоритму:
+Стек технологий
 
-1. взять объекты из ключа objects
+Python 3.12+
 
-2. собрать полный список объектов из таблицы data, учитывая, что в ключе objects содержатся объекты, у которых есть связанные дочерние объекты (связь по полю parent таблицы datа)
+PostgreSQL
 
-3. изменить данные для объектов в таблице data, если они подходят под условие блока operation_details, где каждый ключ это название поля, внутри блок со старым значением в ключе old, которое нужно проверить, и новое значение в ключе new, на которое нужно изменить данные.
+psycopg2 / psycopg2-binary
 
-Пример:
+python-dotenv
 
- "owner": {
-     "new": "owner_4",
-     "old": "owner_3"
- },
-"название поля в бд": {
-     "new": "значение, на которое меняем",
-     "old": "старое значение, которе нужно проверить, может быть массивом"
- }
- 
-4. после обработки документа в таблице documents поставить отметку времени в поле processed_at, это будет означать, что документ обработан
+---
 
-5. Если всё завершилось успешно, возвращаем True, если нет - False
+Установка
+
+pip install -r requirements.txt
+
+.env файл
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+---
+
+Запуск
+
+1. Создание базы данных:
+
+from create_base import creat_base
+creat_base('postgres', 'test')
+
+2. Создание таблиц и заполнение тестовыми данными:
+
+from create_base import create_table, new_base
+create_table(new_base)
+
+3. Обработка документов:
+
+from main import main
+from create_base import new_base
+main(new_base)
+
+---
+
+Структура проекта
+
+.
+├── config.py
+├── object_database_connect.py
+├── decorator_catching_error.py
+├── create_base.py
+├── data_filler.py
+├── data_correction.py
+├── main.py
+├── requirements.txt
+└── README.md
+
+---
+
+Особенности
+Декоратор @decorator_catching_errors для обработки ошибок.
+Контекстный менеджер для безопасного соединения с базой данных.
+Индексация ключевых полей для ускорения запросов и избежания полного сканирования таблиц.
+Генерация случайных данных для тестирования логики.
