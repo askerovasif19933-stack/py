@@ -1,17 +1,31 @@
 Тестовое задание: обработка документов в PostgreSQL
 
 Подготовка
+
 1. Запустить скрипт data_filler.py для генерации тестовых данных.
+
+
 2. Данные будут перенесены в базу через create_table.py.
+
+
+
 
 ---
 
 Легенда
+
 Таблица documents содержит условные документы, поступающие от клиентов.
+
 Таблица data содержит объекты, которые могут встречаться в документах.
-Связь между объектами осуществляется через поле parent
+
+Связь между объектами осуществляется через поле parent:
+
 Объект с заполненным parent считается содержимым упаковки.
+
 Объект без parent считается упаковкой.
+
+
+
 
 ---
 
@@ -41,16 +55,26 @@ CREATE TABLE IF NOT EXISTS public.documents
 ---
 
 Тестовое задание
+
 Написать алгоритм обработки документов из таблицы documents по следующим условиям:
 
 1. Выбрать один необработанный документ (processed_at IS NULL) с типом transfer_document, сортировка по recieved_at ASC.
+
+
 2. Разобрать JSON документа:
 
 Ключ objects — список объектов, связанных с документом.
+
 Ключ operation_details — операции изменения данных в таблице data.
 
+
+
 3. Получить полный список объектов, учитывая дочерние элементы (связь по parent).
+
+
 4. Обновить данные в таблице data, если значения соответствуют условиям operation_details:
+
+
 
 "owner": {
     "new": "owner_4",
@@ -58,7 +82,11 @@ CREATE TABLE IF NOT EXISTS public.documents
 }
 
 5. После успешной обработки документа поставить отметку времени в processed_at.
+
+
 6. Функция возвращает True, если обработка прошла успешно, иначе False.
+
+
 
 Пример структуры JSON документа:
 
@@ -79,6 +107,7 @@ CREATE TABLE IF NOT EXISTS public.documents
     }
 }
 
+
 ---
 
 Стек технологий
@@ -90,6 +119,8 @@ PostgreSQL
 psycopg2 / psycopg2-binary
 
 python-dotenv
+
+
 
 ---
 
@@ -104,25 +135,33 @@ DB_PORT=5432
 DB_USER=your_username
 DB_PASSWORD=your_password
 
+
 ---
 
 Запуск
 
 1. Создание базы данных:
 
+
+
 from create_base import creat_base
 creat_base('postgres', 'test')
 
 2. Создание таблиц и заполнение тестовыми данными:
+
+
 
 from create_base import create_table, new_base
 create_table(new_base)
 
 3. Обработка документов:
 
+
+
 from main import main
 from create_base import new_base
 main(new_base)
+
 
 ---
 
@@ -139,10 +178,15 @@ main(new_base)
 ├── requirements.txt
 └── README.md
 
+
 ---
 
 Особенности
+
 Декоратор @decorator_catching_errors для обработки ошибок.
+
 Контекстный менеджер для безопасного соединения с базой данных.
+
 Индексация ключевых полей для ускорения запросов и избежания полного сканирования таблиц.
+
 Генерация случайных данных для тестирования логики.
