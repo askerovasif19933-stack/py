@@ -1,7 +1,11 @@
 from object_database_connect import ObjectDataBaseConnect
 from data_correction import select_one_doc, parsing_data, search_all_child, correct_data, set_processing_time
 from create_base import new_base
+from indexing import indexing
 
+
+
+indexing(new_base)
 
 def main(base:str):
 
