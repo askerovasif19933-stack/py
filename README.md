@@ -32,13 +32,21 @@
 Создание таблиц в PostgreSQL
 
 CREATE TABLE IF NOT EXISTS public.data
+
 (
+
     object character varying(50) NOT NULL,
+    
     status integer,
+    
     level integer,
+    
     parent character varying,
+    
     owner character varying(14),
+    
     CONSTRAINT data_pkey PRIMARY KEY (object)
+    
 );
 
 CREATE TABLE IF NOT EXISTS public.documents
