@@ -17,7 +17,7 @@ def select_one_doc(db: 'ObjectDataBaseConnect'):
     return row
 
 @decorator_catching_errors
-def parsing_data(db: 'ObjectDataBaseConnect', row: list):
+def parsing_data(row: list):
     """Разбираем картеж на doc_id, json, разбирам json на objects, operation_details"""
     doc_id, jsonb = row
     obj = jsonb['objects']

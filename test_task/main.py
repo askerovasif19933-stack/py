@@ -14,7 +14,7 @@ def main(base:str):
 
         row = select_one_doc(db)
 
-        doc_id, object, operation_details = parsing_data(db, row)
+        doc_id, object, operation_details = parsing_data(row)
 
         for obj in object:
             all_parand_child = search_all_child(db, obj)

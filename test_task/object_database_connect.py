@@ -1,4 +1,4 @@
-from test.config import host, port, password, user
+from config import host, port, password, user
 import psycopg2
 
 # класс для соединения, выборки, втавки и измения данных
