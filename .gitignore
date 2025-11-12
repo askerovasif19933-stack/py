@@ -1,0 +1,23 @@
+﻿#инструкции и команды
+manual.txt
+
+# Sensitive data
+.env
+config.py
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+env/
+
+# IDE (optional)
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
