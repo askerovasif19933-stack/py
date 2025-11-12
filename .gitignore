@@ -30,11 +30,3 @@ Thumbs.db
 # Logs
 *.log
 
-# Сменить пароль
-(Get-Content .env) -Replace 'DATABASE_PASSWORD=.*', 'DATABASE_PASSWORD=my_new_pass' | Set-Content .env
-
-# Сменить базу данных
-(Get-Content .env) -Replace 'DATABASE_NAME=.*', 'DATABASE_NAME=production' | Set-Content .env
-
-# Добавить новую настройку
-Add-Content -Path .env -Value "DEBUG_MODE=True"
