@@ -52,7 +52,7 @@ def __make_doc(data: dict) -> dict:
     saler = reciver = random.choice(inns)
     while saler == reciver:
         reciver = random.choice(inns)
-        
+
     doc = dict()
     dd = doc['document_data'] = dict()
     dd['document_id'] = id = str(uuid.uuid4())
@@ -86,3 +86,5 @@ if __name__ == '__main__':
     # данные для базы:
     data_tbl = list(data.values())
     documents_tbl = make_documents(data)
+
+

@@ -10,7 +10,7 @@ env/
 .venv/
 
 # Environment variables
-.env
+=
 .env.local
 
 # Новые правила для manual файлов
