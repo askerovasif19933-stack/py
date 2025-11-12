@@ -26,19 +26,17 @@ def parsing_data(db: 'ObjectDataBaseConnect', row: list):
     return doc_id, obj, operation_details
 
 @decorator_catching_errors
-def search_all_child(db: 'ObjectDataBaseConnect', object_in_json: list):
+def search_all_child(db: 'ObjectDataBaseConnect', object: list):
     """Поиск дочерних обьектов"""
-    sql = """SELECT object FROM data WHERE parent = ANY(%s)"""
-
-    child = set(i[0] for i in db.select(sql, (object_in_json,), fetch_all=True))
-    parand_child = list(child) + object_in_json
+    sql = """SELECT object FROM data WHERE parent = %s"""
+    child = set(i[0] for i in db.select(sql, (object,), fetch_all=True))
+    parand_child = list(child).append(object)
 
     return parand_child
 
 @decorator_catching_errors
 def correct_data(db: 'ObjectDataBaseConnect', all_parand_child: list, operation_details: dict[str: dict]):
     """Изменения старых значений на новые"""
-
     if operation_details:
 
         for operation, details in operation_details.items():
