@@ -174,6 +174,8 @@ DB_PASSWORD=your_password
 
 Запуск
 
+Перейти в папку test_task
+
 1. Создание базы данных, запустить файл creat_base:
 
 creat_base('postgres', 'test')
