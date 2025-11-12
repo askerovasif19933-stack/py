@@ -165,8 +165,11 @@ pip install -r requirements.txt
 .env файл
 
 DB_HOST=localhost
+
 DB_PORT=5432
+
 DB_USER=your_username
+
 DB_PASSWORD=your_password
 
 
