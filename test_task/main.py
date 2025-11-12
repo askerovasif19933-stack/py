@@ -2,11 +2,13 @@ from object_database_connect import ObjectDataBaseConnect
 from correction_data import select_one_doc, parsing_data, search_all_child, correct_data, set_processing_time
 from create_base import new_base
 from indexing import indexing
+from decorator_catching_error import decorator_catching_errors
 
 
 
 indexing(new_base)
 
+@decorator_catching_errors
 def main(base:str):
 
     with ObjectDataBaseConnect(base) as db:
