@@ -3,7 +3,7 @@ manual.txt
 
 # Sensitive data
 .env
-config.py
+
 
 # Python cache
 __pycache__/
