@@ -1,7 +1,6 @@
 
 from create_base import new_base
 from object_database_connect import ObjectDataBaseConnect
-from decorator_catching_error import decorator_catching_errors
 from data_filler import make_data, make_documents
 
 # создаем таблицы и заполняем сгенерированными значениями
@@ -12,44 +11,47 @@ data = make_data()
 data_tbl = list(data.values())
 documents_tbl = make_documents(data)
 
-@decorator_catching_errors
+
 def create_table(base: str):
     """Создаем таблицы"""
     with ObjectDataBaseConnect(base) as db:
-        sql_data = """
-            CREATE TABLE IF NOT EXISTS public.data
-            (
-                object character varying(50) COLLATE pg_catalog."default" NOT NULL,
-                status integer,
-                level integer,
-                parent character varying COLLATE pg_catalog."default",
-                owner character varying(14) COLLATE pg_catalog."default",
-                CONSTRAINT data_pkey PRIMARY KEY (object)
-            )
-        """
+        try:
+            sql_data = """
+                CREATE TABLE IF NOT EXISTS public.data
+                (
+                    object character varying(50) COLLATE pg_catalog."default" NOT NULL,
+                    status integer,
+                    level integer,
+                    parent character varying COLLATE pg_catalog."default",
+                    owner character varying(14) COLLATE pg_catalog."default",
+                    CONSTRAINT data_pkey PRIMARY KEY (object)
+                )
+            """
+            
+            sql_documents = """
+                CREATE TABLE IF NOT EXISTS public.documents
+                (
+                    doc_id character varying COLLATE pg_catalog."default" NOT NULL,
+                    recieved_at timestamp without time zone,
+                    document_type character varying COLLATE pg_catalog."default",
+                    document_data jsonb,
+                    processed_at timestamp without time zone,
+                    CONSTRAINT documents_pkey PRIMARY KEY (doc_id)
+                )
+            """
+
+            db.execute(sql_data)
+            db.execute(sql_documents)
+
+            print('Таблицы созданы')
+            insert(db, data_tbl, documents_tbl)
+        except Exception as e:
+            print(f'Ошибка {e}')
+
+
         
-        sql_documents = """
-            CREATE TABLE IF NOT EXISTS public.documents
-            (
-                doc_id character varying COLLATE pg_catalog."default" NOT NULL,
-                recieved_at timestamp without time zone,
-                document_type character varying COLLATE pg_catalog."default",
-                document_data jsonb,
-                processed_at timestamp without time zone,
-                CONSTRAINT documents_pkey PRIMARY KEY (doc_id)
-            )
-        """
-
-        db.execute(sql_data)
-        db.execute(sql_documents)
-
-        print('Таблицы созданы')
-        insert(db, data_tbl, documents_tbl)
 
 
-        
-
-@decorator_catching_errors    
 def insert(db: 'ObjectDataBaseConnect', data: list[dict], document: list[dict]):
     """Вставка сгенерированых сзначений в таблицу"""
 

@@ -30,7 +30,7 @@ class ObjectDataBaseConnect:
             return cur.fetchone()
             
     
-    def execute(self, sql, parms=None, ext_many = False):
+    def execute(self, sql, parms= None, ext_many = False):
         """Изменение и вставка данных"""
 
         with self.connect_db.cursor() as cur:
@@ -42,6 +42,9 @@ class ObjectDataBaseConnect:
     def close(self):
         """Закрытие соединения"""
         self.connect_db.close()
+
+    def rollback(self):
+        self.connect_db.rollback()
 
     def __enter__(self):
         return self
