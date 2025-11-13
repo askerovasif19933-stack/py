@@ -28,7 +28,7 @@ def main(base:str):
         # new_val = db.select("""SELECT status, owner from data""", fetch_all=True)
         # for k,v in zip(old_val, new_val):
         #     print(k, k==v, v)
-        # return True
+        return True
 
 
 print(main(new_base))
