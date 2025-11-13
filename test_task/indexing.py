@@ -26,7 +26,4 @@ def indexing(base: str):
 
         # Выполняем каждый индекс отдельно
         for query in sql:
-            try:
-                db.execute(query)
-            except Exception as e:
-                print(f"Ошибка при создании индекса: {e}")
+            db.execute(query)
