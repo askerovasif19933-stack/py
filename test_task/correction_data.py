@@ -28,7 +28,7 @@ def parsing_data(row: list):
 
 def search_all_child(db: 'ObjectDataBaseConnect', object: list):
     """Поиск дочерних обьектов"""
-    sql = """SELECT object FROM data WHERE parent = %s"""
+    sql = """SELECT object FROM data WHERE parent = ANY(%s)"""
     child = set(i[0] for i in db.select(sql, (object,), fetch_all=True))
     parand_child = list(child).append(object)
 
