@@ -49,7 +49,7 @@ class ObjectDataBaseConnect:
             self.connect_db.commit()
         self.close()
 
-        return False   # <-- обязательно!
+        return False
 
         
         
