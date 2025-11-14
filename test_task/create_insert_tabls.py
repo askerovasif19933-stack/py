@@ -50,8 +50,6 @@ def create_table(base: str):
         print(f'Ошибка {e}')
 
 
-        
-
 
 def insert(db: 'ObjectDataBaseConnect', data: list[dict], document: list[dict]):
     """Вставка сгенерированых сзначений в таблицу"""
