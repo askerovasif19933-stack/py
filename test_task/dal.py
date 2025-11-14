@@ -84,6 +84,7 @@ def set_processing_time(db: 'ObjectDataBaseConnect', doc_id: str):
 
 
 def process_single_document(db:'ObjectDataBaseConnect'):
+    """Обработка одного документа"""
             
     row = select_one_doc(db)
     if not row:
