@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS public.documents
 
 2. Разобрать JSON документа:
 
-Ключ objects — список материнских объектов в таблице dat.
+Ключ objects — список материнских объектов в таблице data.
 
 Ключ operation_details — операции изменения данных в таблице data.
 
