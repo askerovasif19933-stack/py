@@ -1,7 +1,7 @@
 from config import host, port, password, user
 import psycopg2
 
-# класс для соединения, выборки, втавки и измения данных
+# класс для соединения, выборки, вставки и измения данных
 
 class ObjectDataBaseConnect:
 
