@@ -14,8 +14,9 @@ documents_tbl = make_documents(data)
 
 def create_table(base: str):
     """Создаем таблицы"""
-    with ObjectDataBaseConnect(base) as db:
-        try:
+    try:
+        with ObjectDataBaseConnect(base) as db:
+        
             sql_data = """
                 CREATE TABLE IF NOT EXISTS public.data
                 (
@@ -45,8 +46,8 @@ def create_table(base: str):
 
             print('Таблицы созданы')
             insert(db, data_tbl, documents_tbl)
-        except Exception as e:
-            print(f'Ошибка {e}')
+    except Exception as e:
+        print(f'Ошибка {e}')
 
 
         

@@ -7,9 +7,9 @@ from create_base import new_base
 
         
 def main(base: str):
-    with ObjectDataBaseConnect(base) as db:
-        # old_val = db.select("""SELECT status, owner from data""", fetch_all=True)
-        try:
+    try:
+        with ObjectDataBaseConnect(base) as db:
+            old_val = db.select("""SELECT status, owner from data""", fetch_all=True)
             indexing(db)
             while True:
                 
@@ -17,13 +17,13 @@ def main(base: str):
                 if not row:
                     print(f'Все документы обработаны')
                     break
-        except Exception as e:
-            db.rollback()
-            return False
+            new_val = db.select("""SELECT status, owner from data""", fetch_all=True)
+            for k,v in zip(old_val, new_val):
+                print(k, k==v, v)
+    except Exception as e:
+        return False
 
-        # new_val = db.select("""SELECT status, owner from data""", fetch_all=True)
-        # for k,v in zip(old_val, new_val):
-        #     print(k, k==v, v)
-        return True
+
+    return True
 
 print(main(new_base))

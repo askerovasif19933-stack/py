@@ -7,19 +7,15 @@ class ObjectDataBaseConnect:
 
     def __init__(self, base_name):
 
-        try:
-            self.connect_db = psycopg2.connect(
-                user = user,
-                host = host,
-                port = port,
-                password = password,
-                database = base_name
-            )
+        self.connect_db= psycopg2.connect(
+            user = user,
+            host = host,
+            port = port,
+            password = password,
+            database = base_name
+        )
 
-            self.connect_db.autocommit = True
-        except Exception as e:
-            print(f'Ошибка подключения - {e}')
-
+        
     
     def select(self, sql, parms=None, fetch_all=False):
         with self.connect_db.cursor() as cur:
@@ -43,14 +39,17 @@ class ObjectDataBaseConnect:
         """Закрытие соединения"""
         self.connect_db.close()
 
-    def rollback(self):
-        self.connect_db.rollback()
-
     def __enter__(self):
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
-        return self.close()
+        if exc_type:
+            self.connect_db.rollback()
+        else:
+            self.connect_db.commit()
+        self.close()
+
+        return False   # <-- обязательно!
 
         
         
