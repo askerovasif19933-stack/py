@@ -65,8 +65,8 @@ def insert(db: 'ObjectDataBaseConnect', data: list[dict], document: list[dict]):
         VALUES (%s, %s, %s, %s) ON CONFLICT (doc_id) DO NOTHING
         """
 
-    db.execute(sql_data, insert_data, ext_many=True)
-    db.execute(sql_documents, insert_doc, ext_many=True)
+    db.execute(sql_data, insert_data, execute_many=True)
+    db.execute(sql_documents, insert_doc, execute_many=True)
  
     print('Данные вставлены')
 

@@ -26,7 +26,7 @@ class ObjectDataBaseConnect:
             return cur.fetchone()
             
     
-    def execute(self, sql, parms= None, ext_many = False):
+    def execute(self, sql, parms= None, execute_many = False):
         """Изменение и вставка данных"""
 
         with self.connect_db.cursor() as cur:
