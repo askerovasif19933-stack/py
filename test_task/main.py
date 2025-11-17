@@ -1,5 +1,5 @@
 from object_database_connect import ObjectDataBaseConnect
-from dal import process_single_document 
+from dal import process_single_document, indexing 
 from create_base import new_base
 
 
