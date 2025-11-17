@@ -73,7 +73,7 @@ def correct_data(db: 'ObjectDataBaseConnect', all_parand_child: list, operation_
 
 
 def set_processing_time(db: 'ObjectDataBaseConnect', doc_id: str):
-    """Установка времнеи обработки документа"""
+    """Установка даты и времени для обработаных документов"""
     sql = """
             UPDATE documents
             SET processed_at = NOW()
