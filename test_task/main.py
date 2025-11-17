@@ -1,5 +1,5 @@
 from object_database_connect import ObjectDataBaseConnect
-from dal import select_one_doc, parsing_data, search_all_child, correct_data, set_processing_time, indexing, process_single_document 
+from dal import process_single_document 
 from create_base import new_base
 
 
