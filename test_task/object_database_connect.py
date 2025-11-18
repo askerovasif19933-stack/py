@@ -1,9 +1,13 @@
 from config import host, port, password, user
 import psycopg2
 
-# класс для соединения, выборки, вставки и измения данных
+
 
 class ObjectDataBaseConnect:
+    """ класс для соединения, выборки, вставки и измения данных,
+        атоматический commit при выходе из контекстсного менджера, 
+        закрытие соединения с БД
+        и rollback при возникновении исключения"""
 
     def __init__(self, base_name):
         self.connect_db= psycopg2.connect(
