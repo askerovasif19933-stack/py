@@ -33,7 +33,7 @@ def select_one_doc(db: 'ObjectDataBaseConnect'):
     return row
 
 
-def parsing_data(row: list):
+def parsing_data(row: tuple):
     """Разбираем картеж на doc_id, json, разбирам json на objects, operation_details"""
     doc_id, jsonb = row
     obj = jsonb['objects']
