@@ -1,10 +1,12 @@
 
+from venv import logger
 from create_base import new_base
 from object_database_connect import ObjectDataBaseConnect
 from data_filler import make_data, make_documents
-
+from logger import get_logger
 # создаем таблицы и заполняем сгенерированными значениями
 
+logger = get_logger(__name__)
 
 # данные для базы:
 data = make_data()
@@ -44,10 +46,10 @@ def create_table(base: str):
             db.execute(sql_data)
             db.execute(sql_documents)
 
-            print('Таблицы созданы')
+            logger.info('Таблицы созданы')
             insert(db, data_tbl, documents_tbl)
     except Exception as e:
-        print(f'Ошибка {e}')
+        logger.error(f'Ошибка {e}')
 
 
 
@@ -68,11 +70,11 @@ def insert(db: 'ObjectDataBaseConnect', data: list[dict], document: list[dict]):
     db.execute(sql_data, insert_data, execute_many=True)
     db.execute(sql_documents, insert_doc, execute_many=True)
  
-    print('Данные вставлены')
+    logger.info('Данные вставлены')
+
 
 
 
 
 if __name__ == '__main__':
     create_table(new_base)
-

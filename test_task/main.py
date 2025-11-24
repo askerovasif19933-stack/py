@@ -3,6 +3,7 @@ from dal import process_single_document, indexing
 from create_base import new_base
 
 
+
         
 def main(base: str):
     try:
