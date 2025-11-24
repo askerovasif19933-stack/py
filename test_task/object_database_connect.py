@@ -2,7 +2,6 @@ from config import host, port, password, user
 import psycopg2
 
 
-
 class ObjectDataBaseConnect:
     """ класс для соединения, выборки, вставки и измения данных,
         атоматический commit при выходе из контекстсного менджера, 
