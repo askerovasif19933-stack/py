@@ -1,6 +1,9 @@
 
+from operator import le
 from object_database_connect import ObjectDataBaseConnect
+from logger import get_logger
 
+logger = get_logger(__name__)
 
 def indexing(db: 'ObjectDataBaseConnect'):
     """Индексация полей для быстрого доступа без блокировки таблиц (для больших таблиц)"""
@@ -18,6 +21,8 @@ def indexing(db: 'ObjectDataBaseConnect'):
     # Выполняем каждый индекс отдельно
     for query in sql:
         db.execute(query)
+    logger.info('Индексация полей завершина')
+    
 
 
 def select_one_doc(db: 'ObjectDataBaseConnect'):
@@ -30,6 +35,11 @@ def select_one_doc(db: 'ObjectDataBaseConnect'):
             """
     row = db.select(sql)
 
+    if row:
+        logger.info(f'Выбран документ с id = {row[0][0]}')
+    else:
+        logger.info('Нет необработаных документов')
+
     return row
 
 
@@ -38,6 +48,8 @@ def parsing_data(row: tuple):
     doc_id, jsonb = row
     obj = jsonb['objects']
     operation_details = jsonb['operation_details']
+
+    logger.debug(f'Документ {doc_id}, распарсен на {len(obj)} обьектов и {len(operation_details)} операций')
 
     return doc_id, obj, operation_details
 
@@ -53,6 +65,8 @@ def search_all_child(db: 'ObjectDataBaseConnect', parent: list):
 
     parent_child = list(child)
     parent_child.extend(parent)
+
+    logger.debug(f'Найдено {len(child)} дочерних  для родительских {parent}')
     return parent_child
 
 
@@ -70,6 +84,7 @@ def correct_data(db: 'ObjectDataBaseConnect', all_parand_child: list, operation_
                 WHERE {operation} = %s
                 AND object = ANY(%s)
                 """, (new, old, (all_parand_child,)))
+            logger.info(f'Обнавлен поле {operation} с {old} на {new} для {len(all_parand_child)} обьектов')
 
 
 def set_processing_time(db: 'ObjectDataBaseConnect', doc_id: str):
@@ -81,13 +96,15 @@ def set_processing_time(db: 'ObjectDataBaseConnect', doc_id: str):
             """
 
     db.execute(sql, (doc_id,))
+    logger.info(f'Документ {doc_id} отмечен как обработанный')
 
 
 def process_single_document(db:'ObjectDataBaseConnect'):
     """Обработка одного документа"""
-            
+    logger.info('Начинает обработку одного документа')
     row = select_one_doc(db)
     if not row:
+        logger.info('Документов для обрабоатки нет')
         return None
 
     doc_id, object, operation_details = parsing_data(row)
@@ -95,5 +112,6 @@ def process_single_document(db:'ObjectDataBaseConnect'):
 
     correct_data(db, all_parand_child, operation_details)
     set_processing_time(db, doc_id)
+    logger.info(f'Обработка докумнта {doc_id} завершина')
 
     return row

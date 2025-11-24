@@ -1,7 +1,9 @@
 
 from object_database_connect import ObjectDataBaseConnect
 
+from logger import get_logger
 
+logger = get_logger(__name__)
 
 def creat_base(old_base: str, new_base: str):
     """Создаем базу данных под дествое задание"""
@@ -11,9 +13,9 @@ def creat_base(old_base: str, new_base: str):
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute(f"CREATE DATABASE {new_base}")
-            print(f'База {new_base} успешно создана')
+            logger.info(f'База {new_base} успешно создана')
     except Exception as e:
-        print(f'Ошибка {e}')
+        logger.error(f'Ошибка {e}')
 
 
 
