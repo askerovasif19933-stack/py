@@ -36,7 +36,7 @@ def select_one_doc(db: 'ObjectDataBaseConnect'):
     row = db.select(sql)
 
     if row:
-        logger.info(f'Выбран документ с id = {row[0][0]}')
+        logger.info(f'Выбран документ с id = {row[0]}')
     else:
         logger.info('Нет необработаных документов')
 
